@@ -1,0 +1,8 @@
+button.my-btn {
+    padding: 10px 15px;
+    margin: 10px;
+    border: 2px solid black;
+    outline: none;
+    background-color: black;
+    color: white;
+}
