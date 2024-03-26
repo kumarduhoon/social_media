@@ -4,9 +4,12 @@ import MyButton from '../button/MyButton'
 import { useFormik } from "formik";
 import * as yup from "yup"
 import "./Authhome.css"
+import { useDispatch, useSelector } from 'react-redux'
+import { registerUser } from "../../redux/reducer/action/authAction"
+import toast from 'react-hot-toast';
 const initialValues = {
     username: "",
-    admin: "",
+    role: "",
     email: "",
     password: ""
 }
@@ -14,26 +17,33 @@ const initialValues = {
 const signUpSchema = yup.object().shape({
     username: yup.string().matches(/^[a-zA-Z][A-Za-z0-9_.-]{2,54}$/,
         "Create a username between 3-55 characters using A-Z, a-z, 0-9, the underscore (_), the hyphen (-), and the dot (.).").required(" Username is Required"),
-    admin: yup.string().min(2, 'admin name must be minimum 2')
+    role: yup.string().min(2, 'admin name must be minimum 2')
         .max(15, 'admin name must not be more than 15 characters')
         .required('admin name is required'),
     email: yup.string().email('Invalid email').required('Email is required').matches(/^[\w\-.]+@([\w-]+\.)+[\w-]{2,}$/gm, { message: 'Invalid email', excludeEmptyString: true }),
-    password: yup.string().matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{5,15})/,
-        "Password should be between 6 to 16 characters including 1 uppercase, 1 lowercase, 1 special character, and 1 digit."
-    ).required("password is required")
+    password: yup.string().required("password is required"),
+    // .matches(
+    //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{5,15})/,
+    //     "Password should be between 6 to 16 characters including 1 uppercase, 1 lowercase, 1 special character, and 1 digit."
+    // )
+
+    // c_password: yup.string().oneOf([yup.ref("password")], "password dose not match").required("confrom password is required")
+    // gender: yup.boolean().oneOf([true], "gender is requred").required("this field is required")
 })
 function Authhome() {
+    const { loading, error, userInfo } = useSelector((state) => (state.auth))
+    const dispatch = useDispatch()
     const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
         useFormik({
             initialValues,
             validationSchema: signUpSchema,
             onSubmit: (values, action) => {
-                let formData = new FormData();
-                formData.append("username", values.username)
-                formData.append("admin", values.admin)
-                formData.append("email", values.email)
-                formData.append("password", values.password)
+                dispatch(registerUser({
+                    username: values.username,
+                    role: values.role,
+                    email: values.email,
+                    password: values.password
+                }))
                 action.resetForm();
             },
         });
@@ -55,7 +65,7 @@ function Authhome() {
                                 value={values.username}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className={errors.username && 'input-err'}
+                                className={errors.username ? 'input-err' : ""}
                             />
                             {errors.username && touched.username ? (
                                 <p className="text-red-600">{errors.username}</p>
@@ -63,18 +73,18 @@ function Authhome() {
                         </div>
                         <div className='mb-10'>
                             <Inputbox
-                                lable="Admin"
-                                id="admin"
-                                name="admin"
-                                placeholder="Enter the Admin name"
+                                lable="role"
+                                id="role"
+                                name="role"
+                                placeholder="Enter the Role name"
                                 type="text"
-                                value={values.admin}
+                                value={values.role}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className={errors.admin && 'input-err'}
+                                className={errors.role ? 'input-err' : " "}
                             />
-                            {errors.admin && touched.admin ? (
-                                <p className="text-red-600">{errors.admin}</p>
+                            {errors.role && touched.role ? (
+                                <p className="text-red-600">{errors.role}</p>
                             ) : null}
                         </div>
                         <div className='mb-10'>
@@ -87,7 +97,7 @@ function Authhome() {
                                 value={values.email}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className={errors.email && 'input-err'}
+                                className={errors.email ? 'input-err' : ""}
                             />
                             {errors.email && touched.email ? (
                                 <p className="text-red-600">{errors.email}</p>
@@ -103,7 +113,7 @@ function Authhome() {
                                 value={values.password}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className={errors.password && 'input-err'}
+                                className={errors.password ? 'input-err' : ""}
                             />
                             {errors.password && touched.password ? (
                                 <p className="text-red-600">{errors.password}</p>
@@ -114,7 +124,7 @@ function Authhome() {
                         </div>
 
                     </form>
-                </div>
+                </div >
             </div >
         </>
     )
