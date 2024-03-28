@@ -19,7 +19,6 @@ const signInSchema = yup.object().shape({
 
 function Login() {
     const { loading, error, userInfo } = useSelector((state) => (state.auth))
-    console.log("userInfo", userInfo)
     const dispatch = useDispatch()
     const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
         useFormik({
