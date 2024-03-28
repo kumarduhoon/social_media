@@ -6,7 +6,6 @@ import * as yup from "yup"
 import "./Authhome.css"
 import { useDispatch, useSelector } from 'react-redux'
 import { registerUser } from "../../redux/reducer/action/authAction"
-import toast from 'react-hot-toast';
 const initialValues = {
     username: "",
     role: "",

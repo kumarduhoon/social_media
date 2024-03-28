@@ -37,3 +37,7 @@ export const loginUser = createAsyncThunk("user/login", async (data, { rejectWit
         }
     }
 })
+
+export const getCurrentUser = () => {
+    return (localStorage.getItem("userToken"));
+};
