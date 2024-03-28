@@ -6,9 +6,19 @@ import { Login } from "./components"
 import Profile from './components/pages/Profile'
 import About from './components/pages/About'
 import Header from './components/header/Header'
+import { useSelector, useDispatch } from 'react-redux'
+import { getuser } from "./redux/reducer/slices/auth/authSlice"
 
 function App() {
+  const { isAuthenticated } = useSelector((state) => (state.auth))
+  const dispatch = useDispatch()
+  React.useEffect(() => {
+    if (localStorage.getItem("userToken")) {
+      dispatch(getuser());
+    }
+  })
 
+  console.log(isAuthenticated, "app")
   return (
 
     <>
